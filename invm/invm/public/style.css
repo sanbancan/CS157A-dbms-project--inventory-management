@@ -1,0 +1,154 @@
+/* General body styling */
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f7f7f7;
+    background-image: url("https://media.istockphoto.com/id/1185382671/vector/abstract-blurred-colorful-background.jpg?s=612x612&w=0&k=20&c=3YwJa7lCw-cQ-hviINULUokL9lYU4RuGjMP_E_0N8E4=");
+    background-size: cover;
+    background-position: center;
+}
+
+/* Navbar styling */
+.navbar {
+    width: 100%;
+    background-color: #333;
+    margin-bottom: 20px; /* Ensures there's space below the navbar */
+}
+
+.navbar .container .navbar-header .navbar-brand {
+    margin-left: 400px;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: #fff;
+    font-size: 24px;
+}
+
+/* Header Title */
+.header-title {
+    text-align: center;
+    font-size: 36px;
+    font-weight: bold;
+    color: #333;
+    margin-top: 100px; /* Pushes the title further down to avoid overlap with navbar */
+    margin-bottom: 40px; /* Adds space below the header */
+    margin-left: 50px;
+}
+
+/* Login form container */
+.login-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* Button styling */
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Error message */
+.error {
+    color: red;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* Signup link styling */
+.signup-link {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.signup-link a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
+}
+
+/* Footer styling */
+.footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+    width: 100%;
+    margin-top: auto;  /* This pushes footer to the bottom of the page */
+    position: relative;
+    bottom: 0;
+}
+
+.footer i {
+    margin-right: 10px;
+}
+
+/* Footer contact information */
+.footer .contact-info {
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.footer .contact-info a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.footer .contact-info a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive layout for smaller screens */
+@media (max-width: 768px) {
+    .header-title {
+        font-size: 28px;
+    }
+
+    .login-container {
+        width: 80%;
+    }
+}

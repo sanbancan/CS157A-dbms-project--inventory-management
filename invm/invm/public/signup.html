@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up Page</title>
+    <style>
+        /* General body styling */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f7f7f7;
+            background-image: url('https://media.istockphoto.com/id/1185382671/vector/abstract-blurred-colorful-background.jpg?s=612x612&w=0&k=20&c=3YwJa7lCw-cQ-hviINULUokL9lYU4RuGjMP_E_0N8E4=');
+            background-size: cover;
+        }
+
+        /* Navbar styling */
+        .navbar {
+            width: 100%;
+            background-color: #333;
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar ul {
+            display: flex;
+            justify-content: center;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar li {
+            margin: 0 20px;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        /* Sign up container */
+        .signup-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            margin-top: 100px; /* To push signup form down a bit */
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .error {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .login-link {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .login-link a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .success {
+            color: green;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        /* Footer styling */
+        footer {
+            position: relative;
+            width: 100%;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        footer .footer-links {
+            margin-top: 10px;
+        }
+
+        footer .footer-links a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        footer .footer-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <ul>
+            <li><a href="/static">INVENTORY MANAGEMENT SYSTEM</a></li>
+        </ul>
+    </div>
+
+    <!-- Welcome Heading -->
+    <h1 style="color: white; text-align: center; margin-top: 50px;">PLEASE SIGN UP TO THE INVENTORY</h1>
+
+    <!-- Sign Up Form -->
+    <div class="signup-container">
+        <h2>Sign Up</h2>
+        <form id="signupForm" action="/usersignup" method="POST">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required placeholder="Enter your username">
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required placeholder="Enter your email">
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required placeholder="Enter your password">
+
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" name="phone" required placeholder="Enter your phone number">
+
+            <button type="submit">Sign Up</button>
+        </form>
+        <div class="error" id="error-message"></div>
+        <div class="success" id="success-message"></div>
+
+        <div class="login-link">
+            <p>Already have an account? <a href="/">Login</a></p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Inventory Management System</p>
+        <div class="footer-links">
+            <a href="tel:+1234567890">Phone: +1 (234) 567-890</a>
+            <a href="mailto:support@ims.com">Email: support@ims.com</a>
+        </div>
+    </footer>
+
+    <script>
+        const form = document.getElementById('signupForm');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const phone = document.getElementById('phone').value;
+
+            // Clear any previous messages
+            document.getElementById('error-message').innerText = '';
+            document.getElementById('success-message').innerText = '';
+
+            const response = await fetch('/usersignup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, email, password, phone })
+            });
+
+            if (!response.ok) {
+                const errorMessage = await response.json();
+                document.getElementById('error-message').innerText = `Error: ${errorMessage.error}`;
+            } else {
+                const successMessage = await response.json();
+                document.getElementById('success-message').innerText = `Successfully Signed Up: ${successMessage.message}`;
+            }
+        });
+    </script>
+</body>
+</html>

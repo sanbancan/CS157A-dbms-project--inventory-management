@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management Queries</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(270deg, #ff7eb3, #ff758c, #42e695, #3bb78f);
+            background-size: 800% 800%;
+            animation: gradientAnimation 10s ease infinite;
+            color: #333;
+        }
+
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px; /* Use gap for consistent spacing */
+            justify-content: center; /* Center align buttons horizontally */
+            margin: 40px 0; /* Adjust the vertical spacing of the container */
+        }
+
+        button {
+            padding: 20px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            color: white; 
+            background: none; /* Ensure no default background */
+            border: none; /* Remove default border */
+            margin: 10px; /* Uniform spacing between buttons */
+        }
+
+        .result {
+            margin-top: 20px;
+        }
+        canvas {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        /* DEMO-SPECIFIC STYLES */
+        .typewriter h1 {
+            color: #000;
+            font-family: monospace;
+            overflow: hidden; /* Ensures the content is not revealed until the animation */
+            border-right: .15em solid orange; /* The typwriter cursor */
+            white-space: nowrap; /* Keeps the content on a single line */
+            margin: 0 auto; /* Gives that scrolling effect as the typing happens */
+            letter-spacing: .15em; /* Adjust as needed */
+            animation: 
+            typing 3.5s steps(20, end),
+            blink-caret .5s step-end infinite;
+        }
+        
+        /* The typing effect */
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        
+        /* The typewriter cursor effect */
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: orange }
+        }
+        .btn-12{
+            position: relative;
+            right: 20px;
+            bottom: 20px;
+            border:none;
+            box-shadow: none;
+            width: 130px;
+            height: 40px;
+            line-height: 42px;
+            -webkit-perspective: 230px;
+            perspective: 230px;
+          }
+          .btn-12 span {
+            background-color: #1fd1f9;
+            background-image: linear-gradient(315deg, #1fd1f9 0%, #b621fe 74%);
+            display: block;
+            position: absolute;
+            width: 130px;
+            height: 40px;
+            box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5),
+             7px 7px 20px 0px rgba(0,0,0,.1),
+             4px 4px 5px 0px rgba(0,0,0,.1);
+            border-radius: 5px;
+            margin:0;
+            text-align: center;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            -webkit-transition: all .3s;
+            transition: all .3s;
+          }
+          .btn-12 span:nth-child(1) {
+            box-shadow:
+             -7px -7px 20px 0px #fff9,
+             -4px -4px 5px 0px #fff9,
+             7px 7px 20px 0px #0002,
+             4px 4px 5px 0px #0001;
+            -webkit-transform: rotateX(90deg);
+            -moz-transform: rotateX(90deg);
+            transform: rotateX(90deg);
+            -webkit-transform-origin: 50% 50% -20px;
+            -moz-transform-origin: 50% 50% -20px;
+            transform-origin: 50% 50% -20px;
+          }
+          .btn-12 span:nth-child(2) {
+            -webkit-transform: rotateX(0deg);
+            -moz-transform: rotateX(0deg);
+            transform: rotateX(0deg);
+            -webkit-transform-origin: 50% 50% -20px;
+            -moz-transform-origin: 50% 50% -20px;
+            transform-origin: 50% 50% -20px;
+          }
+          .btn-12:hover span:nth-child(1) {
+            box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5),
+             7px 7px 20px 0px rgba(0,0,0,.1),
+             4px 4px 5px 0px rgba(0,0,0,.1);
+            -webkit-transform: rotateX(0deg);
+            -moz-transform: rotateX(0deg);
+            transform: rotateX(0deg);
+          }
+          .btn-12:hover span:nth-child(2) {
+            box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5),
+             7px 7px 20px 0px rgba(0,0,0,.1),
+             4px 4px 5px 0px rgba(0,0,0,.1);
+            color: transparent;
+            -webkit-transform: rotateX(-90deg);
+            -moz-transform: rotateX(-90deg);
+            transform: rotateX(-90deg);
+          }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="typewriter">
+            <h1>Welcome To Inventory Management Queries !!</h1>
+        </div>
+
+        <!-- Buttons for each query -->
+        <div class="button-container">
+            <button id="bestSelling" class="custom-btn btn-12"><span>Click!</span><span>Best Selling Items</span></button>
+            <button id="highProfitMargin" class="custom-btn btn-12"><span>Click!</span><span>High Profit Margin</span></button>
+            <button id="salesPerItem" class="custom-btn btn-12"><span>Click!</span><span>Sales Per item</span></button>
+            <button id="salesPerMonth" class="custom-btn btn-12"><span>Click!</span><span>Sales Per Month</span></button>
+            <button id="salesForce" class="custom-btn btn-12"><span>Click!</span><span>SalesforceChart</span></button>
+            <button id="purchaseProduct" class="custom-btn btn-12"><span>Click!</span><span>Purchase Product</span></button>
+            <button id="sellProduct" class="custom-btn btn-12"><span>Click!</span><span>Sell Product</span></button>
+            <button id="profit" class="custom-btn btn-12"><span>Click!</span><span>Profit?</span></button>
+            <button id="mostProfitItem" class="custom-btn btn-12"><span>Click!</span><span>Most Profit Item</span></button>
+            <button id="brokenItems" class="custom-btn btn-12"><span>Click!</span><span>Broken Items</span></button>
+            <button id="allItems" class="custom-btn btn-12"><span>Click!</span><span>All Items</span></button>
+            <button id="salesPerYear" class="custom-btn btn-12"><span>Click!</span><span>Sales Per Year</span></button>
+            <button id="mostProfitableVendor" class="custom-btn btn-12"><span>Click!</span><span>TopVendor</span></button>
+            <button id="leastProfitableVendor" class="custom-btn btn-12"><span>Click!</span><span>BottomVendor</span></button>
+            <button id="mostsolditems3months" class="custom-btn btn-12"><span>Click!</span><span>TopSoldIn3Mon</span></button>
+            <button id="leastsolditems3months" class="custom-btn btn-12"><span>Click!</span><span>LeastSoldIn3Mon</span></button>
+            <button id="bestVendor" class="custom-btn btn-12"><span>Click!</span><span>Best Vendor</span></button>
+            <button id="worstVendor" class="custom-btn btn-12"><span>Click!</span><span>Worst Vendor</span></button>
+        </div>
+
+        <div class="result" id="queryResult">
+            <!-- Query results will be displayed here -->
+        </div>
+        
+        <!-- Canvas for displaying Salesforce Pie Chart -->
+        <canvas id="salesForceChart" width="400" height="400"></canvas>
+
+    </div>
+
+    <!-- Include Chart.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+    <script>
+        const queryResult = document.getElementById('queryResult');
+    
+        // Function to fetch data from the server
+        async function fetchData(route, queryName) {
+            try {
+                // Clear previous results (including pie chart) before fetching new data
+                queryResult.innerHTML = ''; // Clear the result container
+        
+                // If a pie chart is visible, remove it
+                const existingCanvas = document.getElementById('salesForceChart');
+                if (existingCanvas) {
+                    existingCanvas.remove(); // Remove the canvas element if it exists
+                }
+        
+                const response = await fetch(route);
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch ${queryName}.`);
+                }
+        
+                const data = await response.json();
+        
+                // Render results based on the query type
+                if(queryName === "Sales Per Month"){
+                    displayBarChart2(data, queryName);
+                } else if (queryName === "Sales Per Item") {
+                    displayResultInTable(data, queryName); // Display the bar chart for Sales Per Month
+                } else if (queryName === "Salesforce Pie Chart") {
+                    displayPieChart(data, queryName); // Display the pie chart for Salesforce
+                } else {
+                    displayResultInTable(data, queryName); // Display the table for other queries
+                }
+            } catch (error) {
+                console.error(`Error fetching ${queryName}:`, error);
+                queryResult.innerHTML = `<p style="color:red;">Error fetching ${queryName}.</p>`;
+            }
+        }     
+
+        // Function to display the result in a table
+        function displayResultInTable(data, queryName) {
+            if (!data || data.length === 0) {
+                queryResult.innerHTML = `<p>No results found for ${queryName}.</p>`;
+                return;
+            }
+    
+            // Create a table
+            const table = document.createElement('table');
+            table.border = "3";
+            table.style.width = "100%";
+            table.style.borderCollapse = "collapse";
+    
+            // Create table header
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            const keys = Object.keys(data[0]); // Assume all rows have the same structure
+    
+            keys.forEach(key => {
+                const th = document.createElement('th');
+                th.textContent = key;
+                th.style.textAlign = "left";
+                th.style.padding = "8px";
+                th.style.backgroundColor = "#f4f4f4";
+                th.style.border = "1px solid #ddd";
+                headerRow.appendChild(th);
+            });
+    
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+    
+            // Create table body
+            const tbody = document.createElement('tbody');
+            data.forEach(row => {
+                const tr = document.createElement('tr');
+                keys.forEach(key => {
+                    const td = document.createElement('td');
+                    td.textContent = row[key];
+                    td.style.padding = "8px";
+                    td.style.border = "1px solid #ddd";
+                    tr.appendChild(td);
+                });
+                tbody.appendChild(tr);
+            });
+    
+            table.appendChild(tbody);
+    
+            // Clear the previous result and append the new table
+            queryResult.innerHTML = `<h3>${queryName}:</h3>`;
+            queryResult.appendChild(table);
+        }
+
+        // Function to display Sales Per Month as a bar chart
+        function displayBarChart(data, queryName) {
+            if (!data || data.length === 0) {
+                queryResult.innerHTML = `<p>No results found for ${queryName}.</p>`;
+                return;
+            }
+
+            // Prepare the labels and values for the bar chart
+            const labels = data.map(item => item.ItemID);
+            const revenue = data.map(item => item.Revenue);
+
+            // Create the chart container
+            queryResult.innerHTML = `<h3>${queryName}:</h3>`;
+            const canvas = document.createElement('canvas');
+            queryResult.appendChild(canvas);
+
+            // Create the bar chart
+            new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Revenue ($)',
+                        data: revenue,
+                        backgroundColor: 'aqua',
+                        borderColor: 'black',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Revenue ($)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'ItemID'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function displayBarChart2(data, queryName) {
+            if (!data || data.length === 0) {
+                queryResult.innerHTML = `<p>No results found for ${queryName}.</p>`;
+                return;
+            }
+
+            // Prepare the labels and values for the bar chart
+            const labels = data.map(item => item.Month);
+            const revenue = data.map(item => item.Revenue);
+
+            // Create the chart container
+            queryResult.innerHTML = `<h3>${queryName}:</h3>`;
+            const canvas = document.createElement('canvas');
+            queryResult.appendChild(canvas);
+
+            // Create the bar chart
+            new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Revenue ($)',
+                        data: revenue,
+                        backgroundColor: 'aqua',
+                        borderColor: 'black',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Revenue ($)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Month'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        // Function to display Salesforce data as a pie chart
+        function displayPieChart(data, queryName) {
+            const vendorNames = data.map(item => item.VendorName); // Get the names of the vendors
+            const totalRevenue = data.map(item => parseFloat(item.TotalRevenue)); // Get the total revenue for each vendor
+        
+            // Ensure the totalRevenue array is valid
+            const totalSum = totalRevenue.reduce((a, b) => a + b, 0);
+            if (isNaN(totalSum) || totalSum === 0) {
+                console.error('Total revenue sum is invalid or zero.');
+                queryResult.innerHTML = `<p style="color:red;">Error: Invalid total revenue data.</p>`;
+                return;
+            }
+        
+            // Create a new canvas element for the pie chart
+            const canvas = document.createElement('canvas');
+            canvas.id = 'salesForceChart'; // Set the ID for the canvas
+            canvas.style.backgroundColor = 'white';
+        
+            // Add the new canvas to the queryResult container
+            queryResult.appendChild(canvas);
+        
+            // Get the context of the canvas element
+            const ctx = canvas.getContext('2d');
+        
+            // Create the pie chart using Chart.js
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: vendorNames, // Set vendor names as the labels
+                    datasets: [{
+                        label: 'Total Revenue by Vendor',
+                        data: totalRevenue, // Total revenue for each vendor
+                        backgroundColor: [
+                            '#FF5733', '#33FF57', '#3357FF', '#FF33A5', '#FFD733',
+                            '#33FFDD', '#FF33C4', '#33A5FF', '#C433FF', '#33FF7F'
+                        ],
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    // Format revenue values in tooltip
+                                    return tooltipItem.label + ': $' + tooltipItem.raw.toFixed(2);
+                                }
+                            }
+                        },
+                        // Enable datalabels plugin for displaying percentages on the chart
+                        datalabels: {
+                            color: '#000', // Text color for the percentage
+                            font: {
+                                weight: 'bold',
+                                size: 14
+                            },
+                            formatter: function(value, context) {
+                                // Calculate the percentage of each segment
+                                const percentage = (value / totalSum) * 100;
+        
+                                // If percentage is NaN or invalid, return an empty string or a fallback value
+                                return isNaN(percentage) ? '' : percentage.toFixed(2) + '%'; // Display percentage
+                            },
+                            align: 'center',
+                            anchor: 'center'
+                        }
+                    }
+                },
+                // Include the datalabels plugin
+                plugins: [ChartDataLabels]
+            });
+        }
+        
+        // Event listeners for each button
+        document.getElementById('bestSelling').addEventListener('click', () => {
+            fetchData('/queries/best-selling', 'Best Selling Items');
+        });
+    
+        document.getElementById('highProfitMargin').addEventListener('click', () => {
+            fetchData('/queries/high-profit-margin', 'HighProfitMargin');
+        });
+    
+        document.getElementById('salesPerItem').addEventListener('click', () => {
+            fetchData('/queries/sales-per-item', 'Sales Per Item');
+        });
+
+        document.getElementById('salesPerMonth').addEventListener('click', () => {
+            fetchData('/queries/sales-per-month', 'Sales Per Month');
+        });
+
+        // New Salesforce button event listener
+        document.getElementById('salesForce').addEventListener('click', () => {
+            fetchData('/queries/salesForce', 'Salesforce Pie Chart');  // Fetch data for pie chart
+        });
+
+        document.getElementById('purchaseProduct').addEventListener('click', () => {
+            window.location.href = '/queries/purchase';
+        });
+    
+        document.getElementById('sellProduct').addEventListener('click', () => {
+            window.location.href = '/queries/sell';
+        });
+    
+        document.getElementById('profit').addEventListener('click', () => {
+            fetchData('/queries/profit', 'What is the Profit?');
+        });
+    
+        document.getElementById('mostProfitItem').addEventListener('click', () => {
+            fetchData('/queries/most-profit-item', 'Profit for Most Selling Item');
+        });
+
+        document.getElementById('brokenItems').addEventListener('click', () => {
+            fetchData('/queries/broken-items', 'Broken Items');
+        });
+        
+        document.getElementById('allItems').addEventListener('click', () => {
+            fetchData('/queries/all-items', 'All Items');
+        });
+
+        document.getElementById('salesPerYear').addEventListener('click', () => {
+            fetchData('/queries/sales-per-year', 'Sales Per Year');
+        });
+
+        document.getElementById('mostProfitableVendor').addEventListener('click', () => {
+            fetchData('/queries/most-profitable-vendor', 'TopVendor');
+        });
+
+        document.getElementById('leastProfitableVendor').addEventListener('click', () => {
+            fetchData('/queries/least-profitable-vendor', 'BottomVendor');
+        });
+
+        document.getElementById('mostsolditems3months').addEventListener('click', () => {
+            fetchData('/queries/most-sold-items-3-months', 'TopSoldIn3Mon');
+        });
+
+        document.getElementById('leastsolditems3months').addEventListener('click', () => {
+            fetchData('/queries/least-sold-items-3-months', 'LeastSoldIn3Mon');
+        });
+
+        document.getElementById('bestVendor').addEventListener('click', () => {
+            fetchData('/queries/bestVendor', 'Best Vendor');
+        });
+
+        document.getElementById('worstVendor').addEventListener('click', () => {
+            fetchData('/queries/worstVendor', 'Worst Vendor');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sell Product</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: url("https://png.pngtree.com/thumb_back/fh260/background/20240418/pngtree-partnership-of-companies-collaboration-business-technology-internet-concept-image_15659993.jpg");
+            background-size: cover;
+        }
+
+        .purchase-container {
+            background-color: #ffffff;
+            padding: 20px 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .purchase-container h2 {
+            margin-bottom: 20px;
+            color: #333333;
+            font-size: 24px;
+        }
+
+        .purchase-container label {
+            display: block;
+            text-align: left;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #555555;
+        }
+
+        .purchase-container input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #dddddd;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .purchase-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .purchase-container button:hover {
+            background-color: #45a049;
+        }
+
+        .error {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .success {
+            color: #2ecc71;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="purchase-container">
+        <h2>Sell Product</h2>
+        <form id="purchaseForm" action="/sell" method="POST">
+            <label for="userID">User ID</label>
+            <input type="text" id="userID" name="userID" required placeholder="Enter your user ID">
+
+            <label for="itemID">Item ID</label>
+            <input type="text" id="itemID" name="itemID" required placeholder="Enter item ID">
+
+            <label for="quantity">Quantity</label>
+            <input type="number" id="quantity" name="quantity" required placeholder="Enter quantity">
+
+            <button type="submit">Submit Sell</button>
+        </form>
+        <div class="error" id="error-message"></div>
+        <div class="success" id="success-message"></div>
+    </div>
+    
+    <script>
+        const form = document.getElementById('purchaseForm');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Get form values
+            const userID = document.getElementById('userID').value;
+            const itemID = document.getElementById('itemID').value;
+            const quantity = document.getElementById('quantity').value;
+            
+            // Clear previous messages
+            document.getElementById('error-message').innerText = '';
+            document.getElementById('success-message').innerText = '';
+
+            // Send request to backend
+            try {
+                const response = await fetch('/queries/sell-product', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ userID, itemID, quantity })
+                });
+
+                if (response.ok) {
+                    // Handle success
+                    const successMessage = await response.json();
+                    document.getElementById('success-message').innerText = `Selling Successful: ${successMessage.message}`;
+                } else {
+                    // Handle error
+                    const errorMessage = await response.json();  // Assuming error response is JSON
+                    document.getElementById('error-message').innerText = `Error: ${errorMessage.error || 'Something went wrong'}`;
+                }
+            } catch (error) {
+                // Handle network or unexpected errors
+                document.getElementById('error-message').innerText = `Error: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>
